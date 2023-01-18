@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type GamesRounds {
+  hands Int
+  suit  String
+}
+
+model Collection0 {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model counts {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  v     Int    @map("__v")
+  count Int
+}
+
+model games {
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  v                Int           @map("__v")
+  addToLeaderboard Boolean
+  bids             Json
+  bonusRound       Boolean
+  date             DateTime      @db.Date
+  gets             Json
+  location         String
+  number           Int
+  players          String[]      @db.ObjectId
+  rounds           GamesRounds[]
+  scores           Json
+  totalScores      Int[]
+  upAndDown        Boolean
+  winner           String?
+}
+
+model players {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  v          Int      @map("__v")
+  gameCount  Int
+  games      String[] @db.ObjectId
+  name       String
+  totalHands Int
+  totalScore Int
+  wins       Int
+}
