@@ -1,5 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import express from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const PORT = process.env.PORT || 3000;
 
 const prisma = new PrismaClient();
 const app = express();
@@ -44,6 +49,6 @@ app.get('/game/:number/bid-get-percentage', async (req, res) => {
   return res.status(200).send(bidGetsPercentages);
 });
 
-const server = app.listen(3000, () => {
+const server = app.listen(PORT, () => {
   console.log('Server is running on port 3000');
 });
