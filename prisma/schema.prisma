@@ -33,6 +33,7 @@ model games {
   location         String
   number           Int
   players          String[]      @db.ObjectId
+  players2         players[]     @relation(fields: [players], references: [id])
   rounds           GamesRounds[]
   scores           Json
   totalScores      Int[]
@@ -45,6 +46,7 @@ model players {
   v          Int      @map("__v")
   gameCount  Int
   games      String[] @db.ObjectId
+  games2     games[]  @relation(fields: [games], references: [id])
   name       String
   totalHands Int
   totalScore Int

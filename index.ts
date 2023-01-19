@@ -15,45 +15,35 @@ app.get('/players', async (req, res) => {
   res.json(players);
 });
 
+app.get('/game/:number/bid-get-percentage', async (req, res) => {
+  const { number } = req.params;
+
+  const game = await prisma.games.findFirst({
+    where: { number: parseInt(number) },
+    include: { players2: true },
+  });
+
+  if (!game) {
+    return res.status(404).send('Game not found');
+  }
+
+  const bidGets = game.players.map((player) => 0);
+
+  for (let i = 0; i < game.rounds.length; i++) {
+    for (let j = 0; j < game.players.length; j++) {
+      if ((game.bids as number[][])[i][j] === (game.gets as number[][])[i][j]) {
+        bidGets[j]++;
+      }
+    }
+  }
+
+  const bidGetsPercentages = bidGets.map(
+    (bidGet) => bidGet / game.rounds.length
+  );
+
+  return res.status(200).send(bidGetsPercentages);
+});
+
 const server = app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
-
-async function main() {
-  await prisma.$connect();
-  // await prisma.players.create({
-  //   data: {
-  //     name: 'Alice',
-  //     gameCount: 0,
-  //     games: [],
-  //     totalHands: 0,
-  //     totalScore: 0,
-  //     wins: 0,
-  //     v: 0,
-  //   },
-  // });
-
-  const alice = await prisma.players.findFirst({ where: { name: 'Alice' } });
-
-  await prisma.players.update({
-    where: { id: alice?.id },
-    data: {
-      gameCount: 1,
-      totalHands: 1,
-      totalScore: 12,
-    },
-  });
-
-  const allPlayers = await prisma.players.findMany();
-  console.log(allPlayers);
-}
-
-// main()
-//   .then(async () => {
-//     await prisma.$disconnect();
-//   })
-//   .catch(async (e) => {
-//     console.error(e);
-//     await prisma.$disconnect();
-//     process.exit(1);
-//   });
