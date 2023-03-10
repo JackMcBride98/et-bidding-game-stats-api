@@ -47,7 +47,7 @@ app.get('/game/:number/hands-percentage', async (req, res) => {
   return res.status(200).send(handsPercentage);
 });
 
-app.get('/games/:number/bid-aggression', async (req, res) => {
+app.get('/game/:number/bid-aggression', async (req, res) => {
   const { number } = req.params;
 
   const game = await prisma.games.findFirst({
