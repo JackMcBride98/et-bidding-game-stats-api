@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', async (req, res) => {
+  console.log('hello');
   res.json('hello');
 });
 
@@ -229,5 +230,5 @@ app.get('/stats', async (req, res) => {
 });
 
 const server = app.listen(PORT, () => {
-  console.log('Server is running on port 3000');
+  console.log(`Server is running on port ${PORT}`);
 });
